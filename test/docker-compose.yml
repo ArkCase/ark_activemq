@@ -4,7 +4,7 @@ services:
   activemq:
     image: activemq:5.16.2-dev1
     build:
-      context: .
+      context: ..
     init: true
     ports:
       - 8161:8161
