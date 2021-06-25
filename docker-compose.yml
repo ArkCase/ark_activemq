@@ -10,8 +10,4 @@ services:
       - 8161:8161
       - 61616:61616
     volumes:
-      - activemqdata:/app/data
       - ./conf:/app/conf:ro
-
-volumes:
-  activemqdata:
