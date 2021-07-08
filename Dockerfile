@@ -1,4 +1,4 @@
-FROM openjdk:11-jre
+FROM 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_base_java11:latest
 
 # Environment variables: version and tarball stuff
 ENV ACTIVEMQ_VERSION 5.16.2

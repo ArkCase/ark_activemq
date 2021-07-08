@@ -7,8 +7,10 @@ services:
       context: ..
     init: true
     ports:
-      - 5556:5556
+      - 5556:5557
       - 8161:8161
       - 61616:61616
+    environment:
+      ACTIVEMQ_SUNJMX_START: -javaagent:/app/jmx_prometheus_javaagent.jar=5557:/app/jmx-prometheus-config.yaml
     volumes:
       - ./conf:/app/conf:ro
