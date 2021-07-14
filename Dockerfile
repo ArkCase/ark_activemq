@@ -2,7 +2,7 @@ FROM 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_base_java11:latest
 
 LABEL   ORG="Armedia LLC" \
         APP="ActiveMQ" \
-        VERSION="5.16.2" \
+        VERSION="1.0" \
         IMAGE_SOURCE="https://github.com/ArkCase/ark_activemq" \
         MAINTAINER="Armedia LLC"
 
