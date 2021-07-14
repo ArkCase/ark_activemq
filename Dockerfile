@@ -11,7 +11,6 @@ ENV ACTIVEMQ_VERSION="5.16.2"
 
 # Environment variables: tarball stuff
 ENV ACTIVEMQ="apache-activemq-$ACTIVEMQ_VERSION" \
-    ACTIVEMQ="apache-activemq-$ACTIVEMQ_VERSION" \
     ACTIVEMQ_SHA512="27bb26786640f74dcf404db884bedffc0af4bfb2a0248c398044ac9a13e19ff097c590b79eb1404e0b04d17a8f85a8f7de87186a96744e19162d70b3c7a9bdde" \
 # Environment variables: ActiveMQ directories
     ACTIVEMQ_HOME="/app/activemq" \
