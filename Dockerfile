@@ -1,8 +1,11 @@
-FROM 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_base_java11:latest
+# NB: Our `base_centos` image is a pure copy of the `centos` image available on
+#     Docker hub. More information available
+#     [here](https://arkcase.atlassian.net/wiki/spaces/AANTA/pages/1558446081/Process+for+updating+our+base+image+base+centos).
+FROM 345280441424.dkr.ecr.ap-south-1.amazonaws.com/base_centos:7-20210630
 
 LABEL   ORG="Armedia LLC" \
         APP="ActiveMQ" \
-        VERSION="1.0" \
+        VERSION="1.1" \
         IMAGE_SOURCE="https://github.com/ArkCase/ark_activemq" \
         MAINTAINER="Armedia LLC"
 
@@ -21,13 +24,18 @@ ENV ACTIVEMQ="apache-activemq-$ACTIVEMQ_VERSION" \
 # Activate the Prometheus JMX exporter
     ACTIVEMQ_SUNJMX_START="-javaagent:/app/jmx_prometheus_javaagent.jar=5556:/app/jmx-prometheus-config.yaml" \
 # Environment variables: system stuff
-    DEBIAN_FRONTEND="noninteractive"
+    DEBIAN_FRONTEND="noninteractive" \
+# Environment variables: Java stuff
+    JAVA_HOME=/usr/lib/jvm/jre-11-openjdk
 
 WORKDIR /app
 COPY activemqrc /app/home/.activemqrc
 COPY jmx-prometheus-config.yaml .
 
-RUN curl -fsSLo activemq.tgz "https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/${ACTIVEMQ}-bin.tar.gz" \
+RUN     yum -y update \
+        && yum -y install java-11-openjdk \
+        && yum clean all \
+        && curl -fsSLo activemq.tgz "https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/${ACTIVEMQ}-bin.tar.gz" \
         && checksum=$(sha512sum activemq.tgz | awk '{ print $1 }') \
         && if [ $checksum != $ACTIVEMQ_SHA512 ]; then \
                 echo "Unexpected SHA512 checksum; possible man-in-the-middle-attack"; \
