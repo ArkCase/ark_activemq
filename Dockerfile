@@ -1,23 +1,27 @@
 FROM 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_base_java11:latest
 
-# Environment variables: version and tarball stuff
-ENV ACTIVEMQ_VERSION 5.16.2
-ENV ACTIVEMQ         apache-activemq-$ACTIVEMQ_VERSION
-ENV ACTIVEMQ         apache-activemq-$ACTIVEMQ_VERSION
-ENV ACTIVEMQ_SHA512  27bb26786640f74dcf404db884bedffc0af4bfb2a0248c398044ac9a13e19ff097c590b79eb1404e0b04d17a8f85a8f7de87186a96744e19162d70b3c7a9bdde
+LABEL   ORG="Armedia LLC" \
+        APP="ActiveMQ" \
+        VERSION="1.0" \
+        IMAGE_SOURCE="https://github.com/ArkCase/ark_activemq" \
+        MAINTAINER="Armedia LLC"
 
+# Environment variables: version
+ENV ACTIVEMQ_VERSION="5.16.2"
+
+# Environment variables: tarball stuff
+ENV ACTIVEMQ="apache-activemq-$ACTIVEMQ_VERSION" \
+    ACTIVEMQ_SHA512="27bb26786640f74dcf404db884bedffc0af4bfb2a0248c398044ac9a13e19ff097c590b79eb1404e0b04d17a8f85a8f7de87186a96744e19162d70b3c7a9bdde" \
 # Environment variables: ActiveMQ directories
-ENV ACTIVEMQ_HOME /app/activemq
-ENV ACTIVEMQ_BASE $ACTIVEMQ_HOME
-ENV ACTIVEMQ_CONF /app/conf
-ENV ACTIVEMQ_DATA /app/data
-ENV ACTIVEMQ_TMP  /app/tmp
-
+    ACTIVEMQ_HOME="/app/activemq" \
+    ACTIVEMQ_BASE="/app/activemq" \
+    ACTIVEMQ_CONF="/app/conf" \
+    ACTIVEMQ_DATA="/app/data" \
+    ACTIVEMQ_TMP="/app/tmp" \
 # Activate the Prometheus JMX exporter
-ENV ACTIVEMQ_SUNJMX_START="-javaagent:/app/jmx_prometheus_javaagent.jar=5556:/app/jmx-prometheus-config.yaml"
-
+    ACTIVEMQ_SUNJMX_START="-javaagent:/app/jmx_prometheus_javaagent.jar=5556:/app/jmx-prometheus-config.yaml" \
 # Environment variables: system stuff
-ENV DEBIAN_FRONTEND noninteractive
+    DEBIAN_FRONTEND="noninteractive"
 
 WORKDIR /app
 COPY activemqrc /app/home/.activemqrc
