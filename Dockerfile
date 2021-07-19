@@ -9,12 +9,13 @@ LABEL   ORG="Armedia LLC" \
         IMAGE_SOURCE="https://github.com/ArkCase/ark_activemq" \
         MAINTAINER="Armedia LLC"
 
-# Environment variables: version
-ENV ACTIVEMQ_VERSION="5.16.2"
+# Environment variables: versions
+ENV ACTIVEMQ_VERSION="5.16.2" \
+    JMX_PROMETHEUS_AGENT_VERSION="0.15.0"
 
 # Environment variables: tarball stuff
 ENV ACTIVEMQ="apache-activemq-$ACTIVEMQ_VERSION" \
-    ACTIVEMQ_SHA512="27bb26786640f74dcf404db884bedffc0af4bfb2a0248c398044ac9a13e19ff097c590b79eb1404e0b04d17a8f85a8f7de87186a96744e19162d70b3c7a9bdde" \
+    JMX_PROMETHEUS_AGENT="jmx_prometheus_javaagent-${JMX_PROMETHEUS_AGENT_VERSION}.jar" \
 # Environment variables: ActiveMQ directories
     ACTIVEMQ_HOME="/app/activemq" \
     ACTIVEMQ_BASE="/app/activemq" \
@@ -30,21 +31,18 @@ ENV ACTIVEMQ="apache-activemq-$ACTIVEMQ_VERSION" \
 
 WORKDIR /app
 COPY activemqrc /app/home/.activemqrc
-COPY jmx-prometheus-config.yaml .
+COPY jmx-prometheus-config.yaml \
+    "artifacts/${ACTIVEMQ}-bin.tar.gz" \
+    "artifacts/${JMX_PROMETHEUS_AGENT}" \
+    ./
 
 RUN     yum -y update \
         && yum -y install java-11-openjdk \
         && yum clean all \
-        && curl -fsSLo activemq.tgz "https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/${ACTIVEMQ}-bin.tar.gz" \
-        && checksum=$(sha512sum activemq.tgz | awk '{ print $1 }') \
-        && if [ $checksum != $ACTIVEMQ_SHA512 ]; then \
-                echo "Unexpected SHA512 checksum; possible man-in-the-middle-attack"; \
-                exit 1; \
-            fi \
-        && tar xf activemq.tgz \
-        && rm activemq.tgz \
+        && tar xf "${ACTIVEMQ}-bin.tar.gz" \
+        && rm "${ACTIVEMQ}-bin.tar.gz" \
         && ln -s "/app/$ACTIVEMQ" /app/activemq \
-        && curl -fsSLo jmx_prometheus_javaagent.jar https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.15.0/jmx_prometheus_javaagent-0.15.0.jar \
+        && mv "$JMX_PROMETHEUS_AGENT" jmx_prometheus_javaagent.jar \
         && cd activemq \
         && rm bin/activemq-diag bin/env bin/wrapper.jar \
             activemq-all-5.16.2.jar conf/*.ts conf/*.ks \
