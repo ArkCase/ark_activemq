@@ -15,7 +15,8 @@ ENV ACTIVEMQ_VERSION="5.16.2" \
 
 # Environment variables: tarball stuff
 ENV ACTIVEMQ="apache-activemq-$ACTIVEMQ_VERSION" \
-    JMX_PROMETHEUS_AGENT="jmx_prometheus_javaagent-${JMX_PROMETHEUS_AGENT_VERSION}.jar" \
+    ACTIVEMQ_TARBALL="apache-activemq-$ACTIVEMQ_VERSION-bin.tar.gz" \
+    JMX_PROMETHEUS_AGENT_JAR="jmx_prometheus_javaagent-${JMX_PROMETHEUS_AGENT_VERSION}.jar" \
 # Environment variables: ActiveMQ directories
     ACTIVEMQ_HOME="/app/activemq" \
     ACTIVEMQ_BASE="/app/activemq" \
@@ -32,17 +33,17 @@ ENV ACTIVEMQ="apache-activemq-$ACTIVEMQ_VERSION" \
 WORKDIR /app
 COPY activemqrc /app/home/.activemqrc
 COPY jmx-prometheus-config.yaml \
-    "artifacts/${ACTIVEMQ}-bin.tar.gz" \
-    "artifacts/${JMX_PROMETHEUS_AGENT}" \
+    "artifacts/${ACTIVEMQ_TARBALL}" \
+    "artifacts/${JMX_PROMETHEUS_AGENT_JAR}" \
     ./
 
 RUN     yum -y update \
         && yum -y install java-11-openjdk \
         && yum clean all \
-        && tar xf "${ACTIVEMQ}-bin.tar.gz" \
-        && rm "${ACTIVEMQ}-bin.tar.gz" \
+        && tar xf "${ACTIVEMQ_TARBALL}" \
+        && rm "${ACTIVEMQ_TARBALL}" \
         && ln -s "/app/$ACTIVEMQ" /app/activemq \
-        && mv "$JMX_PROMETHEUS_AGENT" jmx_prometheus_javaagent.jar \
+        && mv "$JMX_PROMETHEUS_AGENT_JAR" jmx_prometheus_javaagent.jar \
         && cd activemq \
         && rm bin/activemq-diag bin/env bin/wrapper.jar \
             activemq-all-5.16.2.jar conf/*.ts conf/*.ks \
