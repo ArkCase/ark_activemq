@@ -5,7 +5,7 @@ FROM 345280441424.dkr.ecr.ap-south-1.amazonaws.com/base_centos:7-20210630
 
 LABEL   ORG="Armedia LLC" \
         APP="ActiveMQ" \
-        VERSION="1.1" \
+        VERSION="1.2" \
         IMAGE_SOURCE="https://github.com/ArkCase/ark_activemq" \
         MAINTAINER="Armedia LLC"
 
@@ -33,6 +33,7 @@ ENV ACTIVEMQ="apache-activemq-$ACTIVEMQ_VERSION" \
 WORKDIR /app
 COPY activemqrc /app/home/.activemqrc
 COPY jmx-prometheus-config.yaml \
+    startup.sh \
     "artifacts/${ACTIVEMQ_TARBALL}" \
     "artifacts/${JMX_PROMETHEUS_AGENT_JAR}" \
     ./
@@ -54,4 +55,4 @@ RUN     yum -y update \
         && chown -R activemq:activemq /app/home "$ACTIVEMQ_CONF" "$ACTIVEMQ_DATA" "$ACTIVEMQ_TMP"
 
 USER activemq
-CMD ["/app/activemq/bin/activemq", "console"]
+ENTRYPOINT ["/app/startup.sh"]
