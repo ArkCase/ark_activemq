@@ -41,7 +41,7 @@ WORKDIR /app
 #
 # Create the required user
 #
-RUN useradd --no-create-home --uid 1000 --user-group --home-dir /app/home "${AMQ_USER}"
+RUN useradd --no-create-home --user-group --home-dir /app/home "${AMQ_USER}"
 
 #
 # Update local packages
