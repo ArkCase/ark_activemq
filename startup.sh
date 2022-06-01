@@ -7,12 +7,12 @@ set -eu -o pipefail
 #
 DATA="/app/data"
 
-AMQ_GROUP="$(id -gn "${AMQ_USER}")"
+APP_GROUP="$(id -gn "${APP_USER}")"
 
 OWNER="$(stat -c "%U:%G" "${DATA}")"
-if [ "${OWNER}" != "${AMQ_USER}:${AMQ_GROUP}" ] ; then
+if [ "${OWNER}" != "${APP_USER}:${APP_GROUP}" ] ; then
 	echo "Fixing the ownership for the data directory at [${DATA}]..."
-	chown -R "${AMQ_USER}:${AMQ_GROUP}" "${DATA}"
+	chown -R "${APP_USER}:${APP_GROUP}" "${DATA}"
 fi
 PERMS="$(stat -c "%a" "${DATA}")"
 if [ "${PERMS}" != "770" ] ; then
@@ -31,5 +31,5 @@ rm -rf /app/data/kahadb/lock
 exec su \
 	--preserve-environment \
 	--shell=/bin/bash \
-	"${AMQ_USER}" \
+	"${APP_USER}" \
 	--command "exec /app/activemq/bin/activemq console"

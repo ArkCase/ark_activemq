@@ -11,7 +11,7 @@ ARG OS="linux"
 ARG VER="5.16.2"
 ARG JMX_VER="0.17.0"
 ARG PKG="activemq"
-ARG AMQ_USER="${PKG}"
+ARG APP_USER="${PKG}"
 
 LABEL ORG="Armedia LLC"
 LABEL MAINTAINER="Armedia Devops Team <devops@armedia.com>"
@@ -32,7 +32,7 @@ ENV ACTIVEMQ_TMP="/app/tmp"
 ENV ACTIVEMQ_SUNJMX_START="-javaagent:/app/jmx_prometheus_javaagent-${JMX_VER}.jar=9100:/app/jmx-prometheus-config.yaml"
 # Environment variables: system stuff
 ENV DEBIAN_FRONTEND="noninteractive"
-ENV AMQ_USER="${AMQ_USER}"
+ENV APP_USER="${APP_USER}"
 # Environment variables: Java stuff
 ENV JAVA_HOME="/usr/lib/jvm/jre-11-openjdk"
 
@@ -41,7 +41,7 @@ WORKDIR /app
 #
 # Create the required user
 #
-RUN useradd --no-create-home --user-group --home-dir /app/home "${AMQ_USER}"
+RUN useradd --no-create-home --user-group --home-dir /app/home "${APP_USER}"
 
 #
 # Update local packages
@@ -71,10 +71,10 @@ COPY jmx-prometheus-config.yaml startup.sh ./
 #
 RUN ln -s "/app/${ACTIVEMQ}" "/app/${PKG}" \
     && cd "${PKG}" \
-    && rm bin/activemq-diag bin/env bin/wrapper.jar activemq-all-5.16.2.jar conf/*.ts conf/*.ks \
+    && rm bin/activemq-diag bin/env bin/wrapper.jar "activemq-all-${VER}.jar" conf/*.ts conf/*.ks \
     && rm -r bin/linux-x86-32 bin/linux-x86-64 bin/macosx data docs examples webapps-demo \
     && mkdir -p /app/home "${ACTIVEMQ_CONF}" "${ACTIVEMQ_DATA}" "${ACTIVEMQ_TMP}" \
-    && chown -R "${AMQ_USER}:" /app/home "${ACTIVEMQ_CONF}" "${ACTIVEMQ_DATA}" "${ACTIVEMQ_TMP}" \
+    && chown -R "${APP_USER}:" /app/home "${ACTIVEMQ_CONF}" "${ACTIVEMQ_DATA}" "${ACTIVEMQ_TMP}" \
     && cd "/app/${PKG}/conf" \
     && find . | cpio -pumadv "${ACTIVEMQ_CONF}"
 
