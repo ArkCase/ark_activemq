@@ -11,7 +11,10 @@ ARG OS="linux"
 ARG VER="5.16.2"
 ARG JMX_VER="0.17.0"
 ARG PKG="activemq"
+ARG APP_UID="998"
+ARG APP_GID="${APP_UID}"
 ARG APP_USER="${PKG}"
+ARG APP_GROUP="${APP_USER}"
 
 LABEL ORG="Armedia LLC"
 LABEL MAINTAINER="Armedia Devops Team <devops@armedia.com>"
@@ -32,16 +35,14 @@ ENV ACTIVEMQ_TMP="/app/tmp"
 ENV ACTIVEMQ_SUNJMX_START="-javaagent:/app/jmx_prometheus_javaagent-${JMX_VER}.jar=9100:/app/jmx-prometheus-config.yaml"
 # Environment variables: system stuff
 ENV DEBIAN_FRONTEND="noninteractive"
+ENV APP_UID="${APP_UID}"
+ENV APP_GID="${APP_GID}"
 ENV APP_USER="${APP_USER}"
+ENV APP_USER="${APP_GROUP}"
 # Environment variables: Java stuff
 ENV JAVA_HOME="/usr/lib/jvm/jre-11-openjdk"
 
 WORKDIR /app
-
-#
-# Create the required user
-#
-RUN useradd --no-create-home --user-group --home-dir /app/home "${APP_USER}"
 
 #
 # Update local packages
@@ -67,6 +68,12 @@ COPY activemqrc /app/home/.activemqrc
 COPY jmx-prometheus-config.yaml startup.sh ./
 
 #
+# Create the required user/group
+#
+RUN groupadd --system --gid "${APP_GID}" "${APP_GROUP}"
+RUN useradd  --system --uid "${APP_UID}" --gid "${APP_GROUP}" --no-create-home --home-dir /app/home "${APP_USER}"
+
+#
 # Final file organization
 #
 RUN ln -s "/app/${ACTIVEMQ}" "/app/${PKG}" \
@@ -79,9 +86,9 @@ RUN ln -s "/app/${ACTIVEMQ}" "/app/${PKG}" \
     && find . | cpio -pumadv "${ACTIVEMQ_CONF}"
 
 #
-# Launch as root, but the startup script should exec into an activemq-owned process
+# Launch as the application's user
 #
-USER root
+USER "${APP_USER}"
 EXPOSE 1883 5672 8161 9100 61613 61614 61616
 VOLUME [ "/app/data", "/app/conf" ]
 ENTRYPOINT [ "/app/startup.sh" ]

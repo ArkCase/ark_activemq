@@ -2,34 +2,16 @@
 
 set -eu -o pipefail
 
-#
-# Take ownership of the data directory, if necessary
-#
 DATA="/app/data"
 
-APP_GROUP="$(id -gn "${APP_USER}")"
+[ -e "${DATA}" ] || { echo "The data directory [${DATA}] does not exist" ; exit 1 ; }
+[ -d "${DATA}" ] || { echo "The path [${DATA}] is not a directory" ; exit 1 ; }
+[ -r "${DATA}" ] || { echo "The data directory [${DATA}] is not readable by ${USER} (${UID}:$(id -g))" ; exit 1 ; }
+[ -w "${DATA}" ] || { echo "The data directory [${DATA}] is not writable by ${USER} (${UID}:$(id -g))" ; exit 1 ; }
+[ -x "${DATA}" ] || { echo "The data directory [${DATA}] is not executable by ${USER} (${UID}:$(id -g))" ; exit 1 ; }
 
-OWNER="$(stat -c "%U:%G" "${DATA}")"
-if [ "${OWNER}" != "${APP_USER}:${APP_GROUP}" ] ; then
-	echo "Fixing the ownership for the data directory at [${DATA}]..."
-	chown -R "${APP_USER}:${APP_GROUP}" "${DATA}"
-fi
-PERMS="$(stat -c "%a" "${DATA}")"
-if [ "${PERMS}" != "770" ] ; then
-	echo "Fixing the permissions for the data directory at [${DATA}]..."
-	chmod -R ug+rwX,o-rwx "${DATA}"
-fi
-
-#
 # Remove any pending lock file
-#
-rm -rf /app/data/kahadb/lock
+rm -rf "${DATA}/kahadb/lock" &>/dev/null || true
 
-#
-# Run this as the activemq user, and use exec to ensure there's no way back
-#
-exec su \
-	--preserve-environment \
-	--shell=/bin/bash \
-	"${APP_USER}" \
-	--command "exec /app/activemq/bin/activemq console"
+# Fork into the application
+exec "/app/activemq/bin/activemq" "console"
