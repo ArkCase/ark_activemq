@@ -1,7 +1,8 @@
 # NB: Our `base_centos` image is a pure copy of the `centos` image available on
 #     Docker hub. More information available
 #     [here](https://arkcase.atlassian.net/wiki/spaces/AANTA/pages/1558446081/Process+for+updating+our+base+image+base+centos).
-FROM 345280441424.dkr.ecr.ap-south-1.amazonaws.com/base_centos:7-20210630
+#FROM 345280441424.dkr.ecr.ap-south-1.amazonaws.com/base_centos:7-20210630
+FROM 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_base:latest
 
 #
 # Basic Parameters
@@ -11,7 +12,7 @@ ARG OS="linux"
 ARG VER="5.16.2"
 ARG JMX_VER="0.17.0"
 ARG PKG="activemq"
-ARG APP_UID="998"
+ARG APP_UID="1998"
 ARG APP_GID="${APP_UID}"
 ARG APP_USER="${PKG}"
 ARG APP_GROUP="${APP_USER}"
