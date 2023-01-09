@@ -38,9 +38,10 @@ ENV DEBIAN_FRONTEND="noninteractive"
 ENV APP_UID="${APP_UID}"
 ENV APP_GID="${APP_GID}"
 ENV APP_USER="${APP_USER}"
-ENV APP_USER="${APP_GROUP}"
+ENV APP_GROUP="${APP_GROUP}"
 # Environment variables: Java stuff
 ENV JAVA_HOME="/usr/lib/jvm/jre-11-openjdk"
+ENV USER="${APP_USER}"
 
 WORKDIR /app
 
