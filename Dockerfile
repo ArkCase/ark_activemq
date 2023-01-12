@@ -11,6 +11,19 @@
 # helm install ark-activemq arkcase/ark-activemq
 # helm uninstall ark-activemq
 #
+# How to run: (Docker)
+#
+# docker run --name ark_activemq -p 8161:8161  -d 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_activemq:latest 
+# docker exec -it ark_activemq /bin/bash
+# docker stop ark_activemq
+# docker rm ark_activemq
+#
+# How to run: (Kubernetes)
+#
+# kubectl create -f pod_ark_base.yaml
+# kubectl exec -it pod/base -- bash
+# kubectl delete -f pod_ark_base.yaml
+#
 ###########################################################################################################
 
 
