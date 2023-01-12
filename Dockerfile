@@ -22,7 +22,8 @@ FROM 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_base:latest
 #
 ARG ARCH="amd64"
 ARG OS="linux"
-ARG VER="5.16.2"
+#ARG VER="5.16.2"
+ARG VER="5.17.3"
 ARG JMX_VER="0.17.0"
 ARG PKG="activemq"
 ARG APP_UID="1998"
