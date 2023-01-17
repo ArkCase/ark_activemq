@@ -21,6 +21,7 @@
 # How to run: (Kubernetes)
 #
 # kubectl create -f pod_ark_activemq.yaml
+# kubectl --namespace default port-forward activemq 8080:8161 --address='0.0.0.0'
 # kubectl exec -it pod/activemq -- bash
 # kubectl delete -f pod_ark_activemq.yaml
 #

@@ -25,6 +25,16 @@ helm install ark-activemq arkcase/ark-activemq
 
 helm uninstall ark-activemq
 
+## How to run: (Kubernetes)
+
+kubectl create -f pod_ark_activemq.yaml
+
+kubectl --namespace default port-forward activemq 8080:8161 --address='0.0.0.0'
+
+kubectl exec -it pod/activemq -- bash
+
+kubectl delete -f pod_ark_activemq.yaml
+
 ## How to run: (Docker)
 
 docker run --name ark_activemq -p 8161:8161  -d 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_activemq:latest
