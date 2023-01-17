@@ -11,6 +11,10 @@ spec:
     imagePullPolicy: Always
     #command: ["/bin/sleep", "180d"]
     name: activemq
+    ports:
+    - containerPort: 8161
+      name: console
+      protocol: TCP
   hostname: activemq
   imagePullSecrets:
   - name: aws-arkcase-pull
