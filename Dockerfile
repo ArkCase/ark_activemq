@@ -20,9 +20,9 @@
 #
 # How to run: (Kubernetes)
 #
-# kubectl create -f pod_ark_base.yaml
-# kubectl exec -it pod/base -- bash
-# kubectl delete -f pod_ark_base.yaml
+# kubectl create -f pod_ark_activemq.yaml
+# kubectl exec -it pod/activemq -- bash
+# kubectl delete -f pod_ark_activemq.yaml
 #
 ###########################################################################################################
 
@@ -105,8 +105,9 @@ RUN useradd  --system --uid "${APP_UID}" --gid "${APP_GROUP}" --no-create-home -
 #
 # Final file organization
 #
-RUN ln -s "/app/${ACTIVEMQ}" "/app/${PKG}" \
-    && cd "${PKG}" \
+#RUN ln -s "/app/${ACTIVEMQ}" "/app/${PKG}" \
+RUN mv  "/app/${ACTIVEMQ}" "/app/${PKG}" \
+    && cd "/app/${PKG}" \
     && rm bin/activemq-diag bin/env bin/wrapper.jar "activemq-all-${VER}.jar" conf/*.ts conf/*.ks \
     && rm -r bin/linux-x86-32 bin/linux-x86-64 bin/macosx data docs examples webapps-demo \
     && mkdir -p /app/home "${ACTIVEMQ_CONF}" "${ACTIVEMQ_DATA}" "${ACTIVEMQ_TMP}" \
