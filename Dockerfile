@@ -2,8 +2,8 @@
 #
 # How to build:
 #
-# docker build -t ${BASE_REGISTRY}/ark_activemq:latest .
-# docker push ${BASE_REGISTRY}/ark_activemq:latest
+# docker build -t ${BASE_REGISTRY}/arkcase/activemq:latest .
+# docker push ${BASE_REGISTRY}/arkcase/activemq:latest
 #
 # How to run: (Helm)
 #
@@ -13,7 +13,7 @@
 #
 # How to run: (Docker)
 #
-# docker run --name ark_activemq -p 8161:8161  -d ${BASE_REGISTRY}/ark_activemq:latest 
+# docker run --name ark_activemq -p 8161:8161  -d ${BASE_REGISTRY}/arkcase/activemq:latest 
 # docker exec -it ark_activemq /bin/bash
 # docker stop ark_activemq
 # docker rm ark_activemq
@@ -30,9 +30,8 @@
 ARG BASE_REGISTRY
 ARG BASE_REPO="arkcase/base"
 ARG BASE_TAG="8.7.0"
-ARG BASE_IMAGE="${BASE_REGISTRY}/${BASE_REPO}:${BASE_TAG}"
 
-FROM "${BASE_IMAGE}"
+FROM "${BASE_REGISTRY}/${BASE_REPO}:${BASE_TAG}"
 
 #
 # Basic Parameters
