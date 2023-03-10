@@ -2,8 +2,8 @@
 #
 # How to build:
 #
-# docker build -t 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_activemq:latest .
-# docker push 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_activemq:latest
+# docker build -t ${BASE_REGISTRY}/ark_activemq:latest .
+# docker push ${BASE_REGISTRY}/ark_activemq:latest
 #
 # How to run: (Helm)
 #
@@ -13,7 +13,7 @@
 #
 # How to run: (Docker)
 #
-# docker run --name ark_activemq -p 8161:8161  -d 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_activemq:latest 
+# docker run --name ark_activemq -p 8161:8161  -d ${BASE_REGISTRY}/ark_activemq:latest 
 # docker exec -it ark_activemq /bin/bash
 # docker stop ark_activemq
 # docker rm ark_activemq
@@ -27,9 +27,12 @@
 #
 ###########################################################################################################
 
+ARG BASE_REGISTRY
+ARG BASE_REPO="arkcase/base"
+ARG BASE_TAG="8.7.0"
+ARG BASE_IMAGE="${BASE_REGISTRY}/${BASE_REPO}:${BASE_TAG}"
 
-
-FROM 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_base:latest
+FROM "${BASE_IMAGE}"
 
 #
 # Basic Parameters
@@ -77,9 +80,9 @@ WORKDIR /app
 #
 # Update local packages
 #
-RUN yum -y update \
-    && yum -y install java-11-openjdk \
-    && yum clean all
+RUN yum -y update && \
+    yum -y install java-11-openjdk && \
+    yum clean all
 
 #
 # Download the missing artifacts
@@ -107,14 +110,14 @@ RUN useradd  --system --uid "${APP_UID}" --gid "${APP_GROUP}" --no-create-home -
 # Final file organization
 #
 #RUN ln -s "/app/${ACTIVEMQ}" "/app/${PKG}" \
-RUN mv  "/app/${ACTIVEMQ}" "/app/${PKG}" \
-    && cd "/app/${PKG}" \
-    && rm bin/activemq-diag bin/env bin/wrapper.jar "activemq-all-${VER}.jar" conf/*.ts conf/*.ks \
-    && rm -r bin/linux-x86-32 bin/linux-x86-64 bin/macosx data docs examples webapps-demo \
-    && mkdir -p /app/home "${ACTIVEMQ_CONF}" "${ACTIVEMQ_DATA}" "${ACTIVEMQ_TMP}" \
-    && chown -R "${APP_USER}:" /app/home "${ACTIVEMQ_CONF}" "${ACTIVEMQ_DATA}" "${ACTIVEMQ_TMP}" \
-    && cd "/app/${PKG}/conf" \
-    && find . | cpio -pumadv "${ACTIVEMQ_CONF}"
+RUN mv  "/app/${ACTIVEMQ}" "/app/${PKG}" && \
+    cd "/app/${PKG}" && \
+    rm bin/activemq-diag bin/env bin/wrapper.jar "activemq-all-${VER}.jar" conf/*.ts conf/*.ks && \
+    rm -r bin/linux-x86-32 bin/linux-x86-64 bin/macosx data docs examples webapps-demo && \
+    mkdir -p /app/home "${ACTIVEMQ_CONF}" "${ACTIVEMQ_DATA}" "${ACTIVEMQ_TMP}" && \
+    chown -R "${APP_USER}:" /app/home "${ACTIVEMQ_CONF}" "${ACTIVEMQ_DATA}" "${ACTIVEMQ_TMP}" && \
+    cd "/app/${PKG}/conf" && \
+    find . | cpio -pumadv "${ACTIVEMQ_CONF}"
 
 #
 # Launch as the application's user
