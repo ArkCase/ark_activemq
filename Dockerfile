@@ -80,7 +80,7 @@ WORKDIR /app
 # Update local packages
 #
 RUN yum -y update && \
-    yum -y install java-11-openjdk && \
+    yum -y install java-11-openjdk-devel && \
     yum clean all
 
 #
