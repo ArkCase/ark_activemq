@@ -1,7 +1,10 @@
-# ArkCase ActiveMQ container image
+# ActiveMQ for Arkcase
 
-This repository contains the code necessary to build an ActiveMQ
-container image, as used by ArkCase.
+Apache ActiveMQ® is the most popular open source, multi-protocol, Java-based message broker. It supports industry standard protocols so users get the benefits of client choices across a broad range of languages and platforms. Connect from clients written in JavaScript, C, C++, Python, .Net, and more. Integrate your multi-platform applications using the ubiquitous AMQP protocol. Exchange messages between your web applications using STOMP over websockets. Manage your IoT devices using MQTT. Support your existing JMS infrastructure and beyond. ActiveMQ offers the power and flexibility to support any messaging use-case.
+
+ActiveMQ Documentation is available at https://activemq.apache.org/
+
+## Runtime Instructions
 
 In order to run the ActiveMQ container, you will need to provide the
 complete set of configuration files required by ActiveMQ in the
@@ -13,9 +16,9 @@ what the configuration files could look like.
 
 ## How to build:
 
-docker build -t 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_activemq:latest .
+docker build -t ark_activemq:latest .
 
-docker push 345280441424.dkr.ecr.ap-south-1.amazonaws.com/ark_activemq:latest
+Repository pushes occur automatically when code is checked in.
 
 ## How to run: (Helm)
 
